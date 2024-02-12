@@ -49,12 +49,12 @@ public class Item {
     }
 
     public static void menu(){
-        System.out.println("----TABLA DE ITEMS------------------------------------------------------------------------------------------------------");
+        System.out.println("----TABLA DE ITEMS---------------------------------------------------------------------------------");
 
         for(Item item : itemsList){
             System.out.println(item);
         }
-        System.out.println("------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------");
     }
     public static String readItem(String itemName){
         for (Item item : itemsList){

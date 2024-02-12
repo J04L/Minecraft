@@ -116,14 +116,14 @@ public class Inventary {
         }
     }
     private static void showInvetory(){
-        System.out.println("---------INVENTARIO-----------------------------------------------------------------------------------------------------");
+        System.out.println("---------INVENTARIO--------------------------------------------------------------------------------");
         if (!inventory.isEmpty()){
             for (Item item : inventory) {
                 System.out.print(item.name + "/" + item.lot + "   ");
             }
-            System.out.println();
+            System.out.println(inventory.size() == capacity? "|FULL|": "");
         }else System.out.println("vacío");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------");
     }
 
     public static int remove(Item item){
@@ -134,7 +134,7 @@ public class Inventary {
             //coge del inventario un item con ese nombre empezando por el que no está rellenado
 
             if (itemToRemove==null) {
-                //ya no hay items con ese nombre en el inventario, a lo mejor ya has eliminado todos o...
+                //no hay items con ese nombre en el inventario, a lo mejor ya has eliminado todos o...
                 if (allLotRemoved ==0) System.out.println("-----[ERROR] No hay " + item.name);
                 //no se ha encontrado en el inventario ningún item con el nombre introducido
                 break;
