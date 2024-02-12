@@ -2,12 +2,17 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Item {
+    public static final Item[] itemsList = {new Block(), new Throwable(), new Tool()};
+    //almacena los tipos que lo heredan
     protected static Scanner scanLine = new Scanner(System.in);
     protected String[] nameTable;
-    public static final int numTypes = 3;
+    //almacena los nombres de los items para cada tipo
     protected String name;
+    //nombre del item ejemplo: madera, pala, huevo...
     protected int stack;
+    //máxima cantidad de lot por item
     protected String itemType;
+
     protected int lot;
 
     public Item(String itemType, String[] nameTable, int stack) {
@@ -31,16 +36,12 @@ public class Item {
         return false;
     }
     public static Item createItem(String name, int lot){
+        //busca el tipo y devuelve un item con el nombre y la cantidad introducida
         Item[] items = {new Block(name, lot), new Throwable(name, lot), new Tool(name, lot)};
         for (Item item : items) {
             if (item.nameIsValid(name)) return item;
         }
-        return items[0];
-    }
-
-    public static Item getType(int numRandom){
-        Item[] items = {new Block(), new Tool(), new Throwable()};
-        return items[numRandom];
+        return items[0];//esto nunca sucederá, el nombre está comprobado de ántes siempre
     }
     @Override
     public String toString() {
@@ -49,24 +50,20 @@ public class Item {
 
     public static void menu(){
         System.out.println("----TABLA DE ITEMS------------------------------------------------------------------------------------------------------");
-        Item[] items = {new Block(), new Throwable(), new Tool()};
-        for(Item item : items){
+
+        for(Item item : itemsList){
             System.out.println(item);
         }
         System.out.println("------------------------------------------------------------------------------------------------------------------------");
     }
-    public static boolean validName(String itemName){
-        Item[] items = {new Block(), new Tool(), new Throwable()};
-        for (Item item : items) {
-            if (item.nameIsValid(itemName)) return true;
-        }
-        return false;
-    }
     public static String readItem(String itemName){
-        if (validName(itemName)) return itemName;
-        else {
-            System.out.print("-----[ERROR] No existe el item " + itemName+"\nnombre> ");
-            return readItem(scanLine.nextLine());
+        for (Item item : itemsList){
+            //comprueba si para cada tipo...
+            if (item.nameIsValid(itemName)) return itemName;
+            //si el nombre coincide con alguno de su lista y se coincide lo devuelve
         }
+        System.out.print("-----[ERROR] No existe el item " + itemName+"\nnombre> ");
+        return readItem(scanLine.nextLine());
+        //si no se vuelve a hacer el método
     }
 }

@@ -59,49 +59,61 @@ public class Inventary {
         return lot;
     }
     public static int add(Item item){
+        //item --> auxiliar para almacenar el nombre y el lot añadidos por el usuario
 
         int allItemsAdded = 0;
+        //contador cuantos items se han añadido
 
         Item lastItem = getLastItem(item.name, item.stack);
+        //coge del inventario el item con ese nombre que no está lleno...
+
+        //y lo rellena
         if (lastItem!=null && lastItem.lot<item.stack) {
-            int ultLotToAdd = Math.min(item.stack-lastItem.lot, item.lot);
+            //si existe un último item que no esté lleno...
+
+            int ultLotToAdd = Math.min(item.stack-lastItem.lot, item.lot); //escoge cuanto añadir
+            lastItem.lot += ultLotToAdd;//añade lo escogido
+            item.lot -= ultLotToAdd; //retira lo añadido
+
             allItemsAdded += ultLotToAdd;
-            lastItem.lot += ultLotToAdd;
-            item.lot -= ultLotToAdd;
         }
         else if(inventory.size()==capacity){
+            //el inventario está lleno y no se ha encontrado un item que se pueda rellenar...
             System.out.println("-----[ERROR] Inventario lleno, no puedes añadir " + item.name);
         }
-        //lot 88
 
         while (item.lot > 0 && inventory.size()<capacity) {
-            int itemsToAdd = Math.min(item.stack, item.lot);
-            item.lot -= itemsToAdd; //6
+            //termina cuando ya no que nada que añadir y se ha llenado el inventario
 
+            int itemsToAdd = Math.min(item.stack, item.lot); //escoge cuanto añadir
             if (itemsToAdd > 0) {
                 inventory.add(Item.createItem(item.name, itemsToAdd));
+                //crea item con la cantidad escogida
             }
+            item.lot -= itemsToAdd;//retira lo añadido
+
             allItemsAdded += itemsToAdd;
         }
-        return allItemsAdded;
+        return allItemsAdded; //devuelve la cantidad de items añadidos
     }
     private static void randomFillOut(){
         Random random = new Random();
         int reps = random.nextInt(capacity)+1;
+        //se rellena un número aletorio de veces, máxmo = capacidad
+
         for(int i=0; i<reps; i++){
-            Item item = Item.getType(random.nextInt(Item.numTypes));
+            Item item = Item.itemsList[random.nextInt(Item.itemsList.length)];
+            //item auxiliar que almacena uno de los 3 tipos aleatorios
 
             int nameRandom = random.nextInt(item.nameTable.length);
+            //posición del nombre en la lista de nombres del tipo
+
             int lot = random.nextInt(item.stack)+1;
+            //cantidad a rellenar máximo = stack
 
-            for (String name : item.nameTable) {
-                if (item.nameTable[nameRandom].equals(name)) {
-                    add(Item.createItem(name, lot));
-                    break;
-                }
-            }
+            add(Item.createItem(item.nameTable[nameRandom], lot));
+            //añade un item con el nombre aleatorio y la cantidad aleatoria
         }
-
     }
     private static void showInvetory(){
         System.out.println("---------INVENTARIO-----------------------------------------------------------------------------------------------------");
@@ -113,23 +125,30 @@ public class Inventary {
         }else System.out.println("vacío");
         System.out.println("------------------------------------------------------------------------------------------------------------------------");
     }
+
     public static int remove(Item item){
         int allLotRemoved =0;
 
         while(item.lot > 0){
             Item itemToRemove = getLastItem(item.name, item.stack);
+            //coge del inventario un item con ese nombre empezando por el que no está rellenado
+
             if (itemToRemove==null) {
+                //ya no hay items con ese nombre en el inventario, a lo mejor ya has eliminado todos o...
                 if (allLotRemoved ==0) System.out.println("-----[ERROR] No hay " + item.name);
+                //no se ha encontrado en el inventario ningún item con el nombre introducido
                 break;
             }
-            int itemsToRemove = Math.min(itemToRemove.lot, item.lot);
-            itemToRemove.lot -= itemsToRemove;
-            item.lot -= itemsToRemove;
+            int itemsToRemove = Math.min(itemToRemove.lot, item.lot); //escoge qué cantidad eliminar
+            itemToRemove.lot -= itemsToRemove; //elimina la cantidad escogida
+            item.lot -= itemsToRemove;//retira la cantidad eliminada
 
             allLotRemoved += itemsToRemove;
+
             if (itemToRemove.lot == 0) {
+                //si el item está vacío lo elimina
                 inventory.remove(itemToRemove);
-            } //false
+            }
         }
         return  allLotRemoved;
     }
@@ -138,11 +157,19 @@ public class Inventary {
             Item item = null;
             for (Item i : inventory) {
                 if (i.name.equals(itemName)) {
+                    //si en el inventario se encuentra en el inventario un item con el nombre introducido...
+
                     if (i.lot < stack) return i;
+                    //si el item encontrado no está lleno lo devuelve
+
                     item = i;
+                    //si al final no se ha encontrado ninguno que no esté lleno....
                 }
             }
             return item;
+            //devolveremos un item con ese nombre pero lleno
+            //o
+            //null si no se ha encontrado ningún item en el inventario con el nombre introducido
         }
         return null;
     }
